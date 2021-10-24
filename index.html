@@ -17,9 +17,6 @@
     <!-- CSS Libraries -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="lib/flaticon/font/flaticon.css" rel="stylesheet">
-    <link href="lib/animate/animate.min.css" rel="stylesheet">
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
@@ -32,7 +29,7 @@
 
 
     <h2>Creación de Cinemas</h2>
-    <form>
+    <form id="form_cinemas" method="POST" action="javascript:registrar_cinemas()">
         <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label">Identificación del cinema</label>
             <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
@@ -54,11 +51,11 @@
             <input type="text" class="form-control" id="exampleInputPassword1">
         </div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Registrar</button>
     </form>
 
     <h2>Registro de clientes</h2>
-    <form>
+    <form id="form_clientes" method="POST" action="javascript:registrar_clientes()">
         <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label">Identificación del cliente</label>
             <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
@@ -76,11 +73,11 @@
             <input type="text" class="form-control" id="exampleInputPassword1">
         </div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Registrar</button>
     </form>
 
     <h2>Registro de mensajes</h2>
-    <form>
+    <form id="form_mensajes" method="POST" action="javascript:registrar_mensajes()">
         <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label">Identificación del mensaje</label>
             <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
@@ -91,20 +88,84 @@
         </div>
 
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Registrar</button>
     </form>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
 
-
-    <!-- Contact Javascript File -->
-    <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script>
-
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script type="text/javascript">
+
+        mostrar_cines();
+        mostrar_clientes();
+        mostrar_mensajes();
+
+        function mostrar_cines(){
+            $.ajax({
+                method: "GET",
+                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/cinema/cinema",
+                success: function(response){
+                    console.log(response);
+                }
+            });
+        }
+
+        function registrar_cines(){
+            $.ajax({
+                method: "POST",
+                url: "some.php",
+                data: { name: "John", location: "Boston" },
+                success: function(response){
+                    console.log(response);
+                }
+            });
+        }
+
+        function mostrar_clientes(){
+            $.ajax({
+                method: "GET",
+                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/client/client",
+                success: function(response){
+                    console.log(response);
+                }
+            });
+        }
+
+        function registrar_clientes(){
+            $.ajax({
+                method: "POST",
+                url: "some.php",
+                data: { name: "John", location: "Boston" },
+                success: function(response){
+                    console.log(response);
+                }
+            });
+        }
+
+        function mostrar_mensajes(){
+            $.ajax({
+                method: "GET",
+                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/message/message",
+                success: function(response){
+                    console.log(response);
+                }
+            });
+        }
+
+        function registrar_mensajes(){
+            $.ajax({
+                method: "POST",
+                url: "some.php",
+                data: { name: "John", location: "Boston" },
+                success: function(response){
+                    console.log(response);
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>
