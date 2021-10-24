@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Cinemas</title>
+    <title>Cinemas - Mensajes</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free Website Template" name="keywords">
     <meta content="Free Website Template" name="description">
@@ -26,34 +26,21 @@
 <body>
     <!-- Top Bar Start -->
 
-    <!-- { "id": 1, "owner": "Juan", "capacity" :20, "category_id":1, "name":"algo" } -->   
+    <!-- { "id": 1, "owner": "Juan", "capacity" :20, "category_id":1, "name":"algo" } -->    
 
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-6">
-                <h2>Creación de Cinemas</h2>
-                <form id="form_cinemas" method="POST" action="javascript:registrar_cinemas()">
+                <h2>Registro de mensajes</h2>
+                <form id="form_mensajes" method="POST" action="javascript:registrar_mensajes()">
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Identificación del cinema</label>
+                        <label for="exampleInputEmail1" class="form-label">Identificación del mensaje</label>
                         <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Dueño del cinema</label>
+                        <label for="exampleInputPassword1" class="form-label">Mensaje</label>
                         <input type="text" class="form-control" id="exampleInputPassword1">
                     </div>
-                    <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Capacidad del cinema</label>
-                        <input type="text" class="form-control" id="exampleInputPassword1">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Identificación de la categoría</label>
-                        <input type="text" class="form-control" id="exampleInputPassword1">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Nombre del cinema</label>
-                        <input type="text" class="form-control" id="exampleInputPassword1">
-                    </div>
-
                     <button type="submit" class="btn btn-primary">Registrar</button>
                 </form>
             </div>
@@ -64,21 +51,17 @@
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-12">
-                <h2>Cines</h2>
+                <h2>Mensajes</h2>
                 <br>
-                <table class="table" id="tabla_cines">
+                <table class="table table-response" id="tabla_mensajes">
                     <thead>
                         <th>Id</th>
-                        <th>Responsable</th>
-                        <th>Capacidad</th>
-                        <th>Id Categoria</th>
-                        <th>Nombre</th>
+                        <th>Mensaje</th>
                     </thead>
                 </table>
             </div>
         </div>
     </div>
-
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -88,40 +71,37 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script type="text/javascript">
-    
-        $(document).ready( function () {
-            $('#tabla_cines').DataTable();
 
-            mostrar_cines();
+        $(document).ready( function () {
+            $('#tabla_mensajes').DataTable();
+
+            mostrar_mensajes();
         } );
 
-        function mostrar_cines(){
+        function mostrar_mensajes(){
             $.ajax({
                 method: "GET",
-                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/cinema/cinema",
+                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/message/message",
                 success: function(response){
                     console.log(response);
                 }
             });
         }
 
-        function registrar_cines(){
+        function registrar_mensajes(){
 
-            var id_cin = $("#").val();
-            var owner_cin = $("#").val();
-            var capacity_cin = $("#").val();
-            var category_id_cin = $("#").val();
-            var name_cin = $("#").val();
+            var id_mess = $("#").val();
+            var mess_tex = $("#").val();
 
             $.ajax({
                 method: "POST",
-                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/cinema/cinema",
-                data: {id: id_cin, owner: owner_cin, capacity: capacity_cin, category_id: category_id_cin, name: name_cin},
+                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/message/message",
+                data: {id: id_mess, messagetext: mess_tex},
                 success: function(response){
                     console.log(response);
                 }
             });
-        }        
+        }
     </script>
 </body>
 
