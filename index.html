@@ -32,29 +32,29 @@
         <div class="row">
             <div class="col-md-6">
                 <h2>Creación de Cinemas</h2>
-                <form id="form_cinemas" method="POST" action="javascript:registrar_cinemas()">
+                <form id="form_cinemas" method="POST" action="javascript:registrar_cines()">
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Identificación del cinema</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <label for="id_cin" class="form-label">Identificación del cinema</label>
+                        <input type="text" class="form-control" id="id_cin" aria-describedby="emailHelp">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Dueño del cinema</label>
-                        <input type="text" class="form-control" id="exampleInputPassword1">
+                        <label for="own_cin" class="form-label">Dueño del cinema</label>
+                        <input type="text" class="form-control" id="own_cin">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Capacidad del cinema</label>
-                        <input type="text" class="form-control" id="exampleInputPassword1">
+                        <label for="cap_cin" class="form-label">Capacidad del cinema</label>
+                        <input type="text" class="form-control" id="cap_cin">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Identificación de la categoría</label>
-                        <input type="text" class="form-control" id="exampleInputPassword1">
+                        <label for="id_categ_cin" class="form-label">Identificación de la categoría</label>
+                        <input type="text" class="form-control" id="id_categ_cin">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Nombre del cinema</label>
-                        <input type="text" class="form-control" id="exampleInputPassword1">
+                        <label for="nom_cin" class="form-label">Nombre del cinema</label>
+                        <input type="text" class="form-control" id="nom_cin">
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Registrar</button>
+                    <button type="submit" class="btn btn-primary" id="btn">Registrar</button>
                 </form>
             </div>
         </div>
@@ -66,15 +66,19 @@
             <div class="col-md-12">
                 <h2>Cines</h2>
                 <br>
-                <table class="table" id="tabla_cines">
-                    <thead>
-                        <th>Id</th>
-                        <th>Responsable</th>
-                        <th>Capacidad</th>
-                        <th>Id Categoria</th>
-                        <th>Nombre</th>
-                    </thead>
-                </table>
+                <div class="dt-responsive table-responsive"></div>
+                    <table class="table" id="tabla_cines">
+                        <thead>
+                            <th>Id</th>
+                            <th>Responsable</th>
+                            <th>Capacidad</th>
+                            <th>Id Categoria</th>
+                            <th>Nombre</th>
+                            <th>Ver</th>
+                            <th>Eliminar</th>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -88,40 +92,188 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script type="text/javascript">
+
+        var tabla;
     
         $(document).ready( function () {
-            $('#tabla_cines').DataTable();
+            tabla = $('#tabla_cines').DataTable({
+                dom: 'Bfrtip',
+                "language": {
+                    "sProcessing":     "Procesando...",
+                    "sLengthMenu":     "Mostrar _MENU_ registros",
+                    "sZeroRecords":    "No se encontraron resultados",
+                    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix":    "",
+                    "sSearch":         "Buscar:",
+                    "sUrl":            "",
+                    "sInfoThousands":  ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+                }
+            });
 
             mostrar_cines();
         } );
 
         function mostrar_cines(){
+
+            tabla.clear().draw();
+
+            clear_formulario();
+
             $.ajax({
                 method: "GET",
                 url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/cinema/cinema",
                 success: function(response){
-                    console.log(response);
+                    if(response['count'] > 0){
+                        for (var a = 0; a < response['items'].length; a++) {
+                            tabla.row.add([
+                                response['items'][a]['id'],
+                                response['items'][a]['owner'],
+                                response['items'][a]['capacity'],
+                                response['items'][a]['category_id'],
+                                response['items'][a]['name'],
+                                '<a class="btn btn-info text-center text-white" style="cursor: pointer;" onclick="javascript:ver_detalle('+response['items'][a]['id']+')">Ver</a>',
+                                '<a class="btn btn-danger text-center text-white" style="cursor: pointer;" onclick="javascript:eliminar_cine('+response['items'][a]['id']+')">Eliminar</a>'
+                            ]).draw();
+                        }
+                    }
+                }
+            });
+        }
+
+        function ver_detalle(id){
+            $.ajax({
+                method: "GET",
+                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/cinema/cinema",
+                dataType: "JSON",
+                data: {id: id},
+                success: function(response){
+                    
+                    const result = response['items'].filter(indice => indice['id'] == id);
+                    
+                    $("#tit").text("Información Cinema");
+
+                    $("#id_cin").val(result[0]['id']);
+                    $("#id_cin").attr('readonly', 'readonly');
+
+                    $("#btn").text("Actualizar");
+
+                    $("#form_cinemas").removeAttr("action");
+                    $("#form_cinemas").attr("action", "javascript:actualizar_cine()");
+
+                    $("#own_cin").val(result[0]['owner']);
+                    $("#cap_cin").val(result[0]['capacity']);
+                    $("#id_categ_cin").val(result[0]['category_id']);                    
+                    $("#nom_cin").val(result[0]['name']);                    
                 }
             });
         }
 
         function registrar_cines(){
 
-            var id_cin = $("#").val();
-            var owner_cin = $("#").val();
-            var capacity_cin = $("#").val();
-            var category_id_cin = $("#").val();
-            var name_cin = $("#").val();
+            var id_cin = $("#id_cin").val();
+            var owner_cin = $("#own_cin").val();
+            var capacity_cin = $("#cap_cin").val();
+            var category_id_cin = $("#id_categ_cin").val();
+            var name_cin = $("#nom_cin").val();
+
+            let datos  = {
+                id: id_cin, 
+                owner: owner_cin, 
+                capacity: capacity_cin, 
+                category_id: category_id_cin, 
+                name: name_cin
+            };
 
             $.ajax({
                 method: "POST",
                 url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/cinema/cinema",
-                data: {id: id_cin, owner: owner_cin, capacity: capacity_cin, category_id: category_id_cin, name: name_cin},
-                success: function(response){
-                    console.log(response);
+                data: JSON.stringify(datos),
+                contentType: "application/JSON",
+                dataType: "JSON",
+                data: JSON.stringify(datos),
+                statusCode: {
+                    201: function() {      
+                        alert("Se registró correctamente el cinema");                  
+                        mostrar_cines();
+                    }
                 }
             });
         }        
+
+        function actualizar_cine(){
+
+            var id_cin = $("#id_cin").val();
+            var owner_cin = $("#own_cin").val();
+            var capacity_cin = $("#cap_cin").val();
+            var category_id_cin = $("#id_categ_cin").val();
+            var name_cin = $("#nom_cin").val();
+
+            let datos  = {
+                id: id_cin, 
+                owner: owner_cin, 
+                capacity: capacity_cin, 
+                category_id: category_id_cin, 
+                name: name_cin
+            };
+
+            $.ajax({
+                type: "PUT",
+                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/cinema/cinema",
+                contentType: "application/JSON",
+                dataType: "JSON",
+                data: JSON.stringify(datos),
+                statusCode: {
+                    201: function() {      
+                        alert("Se actualizó correctamente el cinema");                  
+                        mostrar_cines();
+                    }
+                }
+            });
+        }
+
+        function eliminar_cine(id_cin){
+
+            let datos = {
+                id: id_cin
+            }
+
+            $.ajax({
+                type: "DELETE",
+                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/cinema/cinema",
+                contentType: "application/JSON",
+                dataType: "JSON",
+                data: JSON.stringify(datos),
+                statusCode: {
+                    204: function() {
+                        alert("Se eliminó correctamente el cinema");
+                        mostrar_cines();
+                    }
+                }
+            });
+        }
+
+        function clear_formulario(){
+            $('#form_cinemas')[0].reset();
+
+            $("#tit").text("Registro de cinemas");
+            $("#id_cin").removeAttr('readonly');
+
+            $("#btn").text("Registrar");
+        }
     </script>
 </body>
 

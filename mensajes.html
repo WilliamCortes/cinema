@@ -34,14 +34,14 @@
                 <h2>Registro de mensajes</h2>
                 <form id="form_mensajes" method="POST" action="javascript:registrar_mensajes()">
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Identificación del mensaje</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <label for="id_men" class="form-label">Identificación del mensaje</label>
+                        <input type="text" class="form-control" id="id_men" aria-describedby="emailHelp">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Mensaje</label>
-                        <input type="text" class="form-control" id="exampleInputPassword1">
+                        <label for="mensaj" class="form-label">Mensaje</label>
+                        <input type="text" class="form-control" id="mensaj">
                     </div>
-                    <button type="submit" class="btn btn-primary">Registrar</button>
+                    <button type="submit" class="btn btn-primary" id="btn">Registrar</button>
                 </form>
             </div>
         </div>
@@ -53,12 +53,16 @@
             <div class="col-md-12">
                 <h2>Mensajes</h2>
                 <br>
-                <table class="table table-response" id="tabla_mensajes">
-                    <thead>
-                        <th>Id</th>
-                        <th>Mensaje</th>
-                    </thead>
-                </table>
+                <div class="dt-responsive table-responsive">
+                    <table class="table table-striped table-bordered table-hover nowrap" id="tabla_mensajes">
+                        <thead>
+                            <th>Id</th>
+                            <th>Mensaje</th>
+                            <th>Ver</th>
+                            <th>Eliminar</th>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -72,35 +76,167 @@
     <script src="js/main.js"></script>
     <script type="text/javascript">
 
+        var tabla;
+
         $(document).ready( function () {
-            $('#tabla_mensajes').DataTable();
+            tabla = $('#tabla_mensajes').DataTable({
+                dom: 'Bfrtip',
+                "language": {
+                    "sProcessing":     "Procesando...",
+                    "sLengthMenu":     "Mostrar _MENU_ registros",
+                    "sZeroRecords":    "No se encontraron resultados",
+                    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix":    "",
+                    "sSearch":         "Buscar:",
+                    "sUrl":            "",
+                    "sInfoThousands":  ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+                }
+            });
 
             mostrar_mensajes();
         } );
 
         function mostrar_mensajes(){
+
+            tabla.clear().draw();
+
+            clear_formulario();
+
             $.ajax({
                 method: "GET",
                 url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/message/message",
                 success: function(response){
-                    console.log(response);
+                    if(response['count'] > 0){
+                        for (var a = 0; a < response['items'].length; a++) {
+                            tabla.row.add([
+                                response['items'][a]['id'],
+                                response['items'][a]['messagetext'],
+                                '<a class="btn btn-info text-center text-white" style="cursor: pointer;" onclick="javascript:ver_detalle('+response['items'][a]['id']+')">Ver</a>',
+                                '<a class="btn btn-danger text-center text-white" style="cursor: pointer;" onclick="javascript:eliminar_mensaje('+response['items'][a]['id']+')">Eliminar</a>'
+                            ]).draw();
+                        }
+                    }
+                }
+            });
+        }
+
+        function ver_detalle(id){
+            $.ajax({
+                method: "GET",
+                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/message/message",
+                dataType: "JSON",
+                data: {id: id},
+                success: function(response){
+
+                    const result = response['items'].filter(indice => indice['id'] == id);
+                    
+                    $("#tit").text("Información Mensaje");
+
+                    $("#id_men").val(result[0]['id']);
+                    $("#id_men").attr('readonly', 'readonly');
+
+                    $("#btn").text("Actualizar");
+
+                    $("#form_mensajes").removeAttr("action");
+                    $("#form_mensajes").attr("action", "javascript:actualizar_mensaje()");
+
+                    $("#mensaj").val(result[0]['messagetext']);               
                 }
             });
         }
 
         function registrar_mensajes(){
 
-            var id_mess = $("#").val();
-            var mess_tex = $("#").val();
+            var id_mess = $("#id_men").val();
+            var mess_tex = $("#mensaj").val();
+
+            let datos  = {
+                id: id_mess, 
+                messagetext: mess_tex
+            };
 
             $.ajax({
                 method: "POST",
                 url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/message/message",
-                data: {id: id_mess, messagetext: mess_tex},
-                success: function(response){
-                    console.log(response);
+                contentType: "application/JSON",
+                dataType: "JSON",
+                data: JSON.stringify(datos),
+                statusCode: {
+                    201: function() {      
+                        alert("Se registró correctamente el mensaje");                  
+                        mostrar_mensajes();
+                    }
                 }
             });
+        }
+
+        function actualizar_mensaje(){
+
+            var id_mess = $("#id_men").val();
+            var mess_tex = $("#mensaj").val();
+
+            let datos  = {
+                id: id_mess, 
+                messagetext: mess_tex
+            };
+
+            $.ajax({
+                type: "PUT",
+                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/message/message",
+                contentType: "application/JSON",
+                dataType: "JSON",
+                data: JSON.stringify(datos),
+                statusCode: {
+                    201: function() {      
+                        alert("Se actualizó correctamente el mensaje");                  
+                        mostrar_mensajes();
+                    }
+                }
+            });
+        }
+
+        function eliminar_mensaje(id_men){
+
+            let datos = {
+                id: id_men
+            }
+
+            $.ajax({
+                type: "DELETE",
+                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/message/message",
+                contentType: "application/JSON",
+                dataType: "JSON",
+                data: JSON.stringify(datos),
+                statusCode: {
+                    204: function() {
+                        alert("Se eliminó correctamente el mensaje");
+                        mostrar_mensajes();
+                    }
+                }
+            });
+        }
+
+        function clear_formulario(){
+            $('#form_mensajes')[0].reset();
+
+            $("#tit").text("Registro de mensajes");
+            $("#id_men").removeAttr('readonly');
+
+            $("#btn").text("Registrar");
         }
     </script>
 </body>
