@@ -24,14 +24,27 @@
 </head>
 
 <body>
-    <!-- Top Bar Start -->
-
-    <!-- { "id": 1, "owner": "Juan", "capacity" :20, "category_id":1, "name":"algo" } -->   
-
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Cinemas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="clientes.html">Clientes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="mensajes.html">Mensajes</a>
+                </li>
+            </ul>
+        </div>
+    </nav>  
+    <br><br>
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-6">
-                <h2>Creación de Cinemas</h2>
+                <h2 id="tit">Creación de Cinemas</h2>
                 <form id="form_cinemas" method="POST" action="javascript:registrar_cines()">
                     <div class="mb-3">
                         <label for="id_cin" class="form-label">Identificación del cinema</label>
@@ -94,6 +107,7 @@
     <script type="text/javascript">
 
         var tabla;
+        var url_pet = "https://g3422f5bd85f32f-cinemas.adb.sa-saopaulo-1.oraclecloudapps.com/ords/admin/cinema/cinema";
     
         $(document).ready( function () {
             tabla = $('#tabla_cines').DataTable({
@@ -135,7 +149,7 @@
 
             $.ajax({
                 method: "GET",
-                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/cinema/cinema",
+                url: url_pet,
                 success: function(response){
                     if(response['count'] > 0){
                         for (var a = 0; a < response['items'].length; a++) {
@@ -157,16 +171,15 @@
         function ver_detalle(id){
             $.ajax({
                 method: "GET",
-                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/cinema/cinema",
+                url: url_pet+"/"+id,
+                contentType: "application/JSON",
                 dataType: "JSON",
-                data: {id: id},
                 success: function(response){
-                    
-                    const result = response['items'].filter(indice => indice['id'] == id);
+                    //console.log(response);
                     
                     $("#tit").text("Información Cinema");
 
-                    $("#id_cin").val(result[0]['id']);
+                    $("#id_cin").val(response['items'][0]['id']);
                     $("#id_cin").attr('readonly', 'readonly');
 
                     $("#btn").text("Actualizar");
@@ -174,10 +187,10 @@
                     $("#form_cinemas").removeAttr("action");
                     $("#form_cinemas").attr("action", "javascript:actualizar_cine()");
 
-                    $("#own_cin").val(result[0]['owner']);
-                    $("#cap_cin").val(result[0]['capacity']);
-                    $("#id_categ_cin").val(result[0]['category_id']);                    
-                    $("#nom_cin").val(result[0]['name']);                    
+                    $("#own_cin").val(response['items'][0]['owner']);
+                    $("#cap_cin").val(response['items'][0]['capacity']);
+                    $("#id_categ_cin").val(response['items'][0]['category_id']);                    
+                    $("#nom_cin").val(response['items'][0]['name']);                 
                 }
             });
         }
@@ -200,7 +213,7 @@
 
             $.ajax({
                 method: "POST",
-                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/cinema/cinema",
+                url: url_pet,
                 data: JSON.stringify(datos),
                 contentType: "application/JSON",
                 dataType: "JSON",
@@ -232,7 +245,7 @@
 
             $.ajax({
                 type: "PUT",
-                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/cinema/cinema",
+                url: url_pet,
                 contentType: "application/JSON",
                 dataType: "JSON",
                 data: JSON.stringify(datos),
@@ -253,7 +266,7 @@
 
             $.ajax({
                 type: "DELETE",
-                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/cinema/cinema",
+                url: url_pet,
                 contentType: "application/JSON",
                 dataType: "JSON",
                 data: JSON.stringify(datos),
@@ -271,6 +284,9 @@
 
             $("#tit").text("Registro de cinemas");
             $("#id_cin").removeAttr('readonly');
+
+            $("#form_cinemas").removeAttr("action");
+            $("#form_cinemas").attr("action", "javascript:registrar_cines()");
 
             $("#btn").text("Registrar");
         }

@@ -24,14 +24,26 @@
 </head>
 
 <body>
-    <!-- Top Bar Start -->
-
-    <!-- { "id": 1, "owner": "Juan", "capacity" :20, "category_id":1, "name":"algo" } -->    
-
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Cinemas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="clientes.html">Clientes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="mensajes.html">Mensajes</a>
+                </li>
+            </ul>
+        </div>
+    </nav>  
+    <br><br>
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-6">
-                <h2>Registro de mensajes</h2>
+                <h2 id="tit">Registro de mensajes</h2>
                 <form id="form_mensajes" method="POST" action="javascript:registrar_mensajes()">
                     <div class="mb-3">
                         <label for="id_men" class="form-label">Identificación del mensaje</label>
@@ -77,6 +89,7 @@
     <script type="text/javascript">
 
         var tabla;
+        var url_pet = "https://g3422f5bd85f32f-cinemas.adb.sa-saopaulo-1.oraclecloudapps.com/ords/admin/message/message";
 
         $(document).ready( function () {
             tabla = $('#tabla_mensajes').DataTable({
@@ -118,7 +131,7 @@
 
             $.ajax({
                 method: "GET",
-                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/message/message",
+                url: url_pet,
                 success: function(response){
                     if(response['count'] > 0){
                         for (var a = 0; a < response['items'].length; a++) {
@@ -137,16 +150,14 @@
         function ver_detalle(id){
             $.ajax({
                 method: "GET",
-                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/message/message",
+                url: url_pet+"/"+id,
+                contentType: "application/JSON",
                 dataType: "JSON",
-                data: {id: id},
                 success: function(response){
 
-                    const result = response['items'].filter(indice => indice['id'] == id);
-                    
                     $("#tit").text("Información Mensaje");
 
-                    $("#id_men").val(result[0]['id']);
+                    $("#id_men").val(response['items'][0]['id']);
                     $("#id_men").attr('readonly', 'readonly');
 
                     $("#btn").text("Actualizar");
@@ -154,7 +165,7 @@
                     $("#form_mensajes").removeAttr("action");
                     $("#form_mensajes").attr("action", "javascript:actualizar_mensaje()");
 
-                    $("#mensaj").val(result[0]['messagetext']);               
+                    $("#mensaj").val(response['items'][0]['messagetext']);               
                 }
             });
         }
@@ -171,7 +182,7 @@
 
             $.ajax({
                 method: "POST",
-                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/message/message",
+                url: url_pet,
                 contentType: "application/JSON",
                 dataType: "JSON",
                 data: JSON.stringify(datos),
@@ -196,7 +207,7 @@
 
             $.ajax({
                 type: "PUT",
-                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/message/message",
+                url: url_pet,
                 contentType: "application/JSON",
                 dataType: "JSON",
                 data: JSON.stringify(datos),
@@ -217,7 +228,7 @@
 
             $.ajax({
                 type: "DELETE",
-                url: "https://g025fdb0b912547-db0b8tz.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/message/message",
+                url: url_pet,
                 contentType: "application/JSON",
                 dataType: "JSON",
                 data: JSON.stringify(datos),
@@ -235,6 +246,9 @@
 
             $("#tit").text("Registro de mensajes");
             $("#id_men").removeAttr('readonly');
+
+            $("#form_mensajes").removeAttr("action");
+            $("#form_mensajes").attr("action", "javascript:registrar_mensajes()");
 
             $("#btn").text("Registrar");
         }
