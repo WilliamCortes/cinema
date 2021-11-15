@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Cinemas</title>
+    <title>Cinemas -  Categorys</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free Website Template" name="keywords">
     <meta content="Free Website Template" name="description">
@@ -21,11 +21,10 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-    <link href="css/cinema.css" rel="stylesheet">
+    <link href="css/category.css" rel="stylesheet">
 </head>
 
 <body>
-    
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
@@ -51,58 +50,39 @@
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-6">
-                <h2 id="tit">Registro de Cinemas</h2>
+                <h2 id="tit">Registro de categorias</h2>
                 <br>
-                <form id="form_cinemas" method="POST" action="javascript:registrar_cines()"> 
-                    <div class="mb-3 idCin">
-                        <label for="id_cin" class="form-label">Id de cinema</label>
-                        <input type="number" class="form-control" id="id_cin" name="id_cin">
-                    </div>                   
-                    <div class="mb-3">
-                        <label for="nom_cin" class="form-label">Nombre del cinema</label>
-                        <input type="text" class="form-control" id="nom_cin" name="nom_cin" required>
+                <form id="form_categorias" method="POST" action="javascript:registrar_categorias()">
+                    <div class="mb-3 idCat">
+                        <label for="id_cat" class="form-label">Id de la categoria</label>
+                        <input type="number" class="form-control" id="id_cat" name="id_cat">
                     </div>
                     <div class="mb-3">
-                        <label for="own_cin" class="form-label">Dueño del cinema</label>
-                        <input type="text" class="form-control" id="own_cin" name="own_cin" required>
+                        <label for="nom_cat" class="form-label">Nombre de la categoria</label>
+                        <input type="text" class="form-control" id="nom_cat" name="nom_cat" required>
                     </div>
                     <div class="mb-3">
-                        <label for="cap_cin" class="form-label">Capacidad del cinema</label>
-                        <input type="number" class="form-control" id="cap_cin" name="cap_cin" required>
+                        <label for="des_cat" class="form-label">Descripción Categoria</label>
+                        <textarea class="form-control" id="des_cat" name="des_cat" required></textarea>
                     </div>
-                    <div class="mb-3">
-                        <label for="des_cin" class="form-label">Descripción del cinema</label>
-                        <textarea class="form-control" id="des_cin" name="des_cin" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="id_categ_cin" class="form-label">Categoría</label>
-                        <select class="form-control" id="id_categ_cin" required> 
-                            <option value="">Seleccionar Categoria</option>
-                        </select>
-                    </div>
-                    
 
                     <button type="submit" class="btn btn-primary" id="btn">Registrar</button>
                 </form>
             </div>
         </div>
     </div>
-
     <br><br>
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-12">
-                <h2>Cines</h2>
+                <h2>Categorias</h2>
                 <br>
-                <div class="dt-responsive table-responsive"></div>
-                    <table class="table table-bordered table-hover table-striped nowrap" id="tabla_cines">
+                <div class="dt-responsive table-responsive">
+                    <table class="table table-striped table-bordered table-hover nowrap" id="tabla_categorias">
                         <thead class="thead-dark">
                             <th>Id</th>
                             <th>Nombre</th>
-                            <th>Responsable</th>
-                            <th>Capacidad</th>
-                            <th>Categoria</th>
-                            <th>Descripción</th>                            
+                            <th>Descripción</th>
                             <th>Ver</th>
                             <th>Eliminar</th>
                         </thead>
@@ -120,8 +100,7 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-    <script src="js/cinema.js"></script>
-    
+    <script src="js/category.js"></script>
 </body>
 
 </html>

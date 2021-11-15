@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Cinemas</title>
+    <title>Cinemas -  Reservations</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free Website Template" name="keywords">
     <meta content="Free Website Template" name="description">
@@ -21,11 +21,10 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-    <link href="css/cinema.css" rel="stylesheet">
+    <link href="css/reservation.css" rel="stylesheet">
 </head>
 
 <body>
-    
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
@@ -51,58 +50,62 @@
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-6">
-                <h2 id="tit">Registro de Cinemas</h2>
+                <h2 id="tit">Registro de Reservaciones</h2>
                 <br>
-                <form id="form_cinemas" method="POST" action="javascript:registrar_cines()"> 
-                    <div class="mb-3 idCin">
-                        <label for="id_cin" class="form-label">Id de cinema</label>
-                        <input type="number" class="form-control" id="id_cin" name="id_cin">
-                    </div>                   
-                    <div class="mb-3">
-                        <label for="nom_cin" class="form-label">Nombre del cinema</label>
-                        <input type="text" class="form-control" id="nom_cin" name="nom_cin" required>
+                <form id="form_reservaciones" method="POST" action="javascript:registrar_reservaciones()">
+                    <div class="mb-3 idRes">
+                        <label for="id_res" class="form-label">Id de la Reserva</label>
+                        <input type="number" class="form-control" id="id_res" name="id_res">
                     </div>
                     <div class="mb-3">
-                        <label for="own_cin" class="form-label">Dueño del cinema</label>
-                        <input type="text" class="form-control" id="own_cin" name="own_cin" required>
+                        <label for="fec_res" class="form-label">Fecha de reserva</label>
+                        <input type="date" class="form-control" id="fec_res" name="fec_res" required>
                     </div>
                     <div class="mb-3">
-                        <label for="cap_cin" class="form-label">Capacidad del cinema</label>
-                        <input type="number" class="form-control" id="cap_cin" name="cap_cin" required>
+                        <label for="fec_dev" class="form-label">Fecha de devolución</label>
+                        <input type="date" class="form-control" id="fec_dev" name="fec_dev" required>
                     </div>
                     <div class="mb-3">
-                        <label for="des_cin" class="form-label">Descripción del cinema</label>
-                        <textarea class="form-control" id="des_cin" name="des_cin" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="id_categ_cin" class="form-label">Categoría</label>
-                        <select class="form-control" id="id_categ_cin" required> 
-                            <option value="">Seleccionar Categoria</option>
+                        <label for="id_cinema" class="form-label">Cienema</label>
+                        <select class="form-control" id="id_cinema" required> 
+                            <option value="">Seleccionar cinema</option>
                         </select>
                     </div>
-                    
+                    <div class="mb-3">
+                        <label for="id_client" class="form-label">Cliente</label>
+                        <select class="form-control" id="id_client" name="id_client" required> 
+                            <option value="">Seleccionar cliente</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="est_res" class="form-label">Estado</label>
+                        <select class="form-control" id="est_res" name="est_res" required> 
+                            <option value="">Seleccionar estado</option>
+                            <option value="created">Created</option>
+                        </select>
+                    </div>
 
                     <button type="submit" class="btn btn-primary" id="btn">Registrar</button>
                 </form>
             </div>
         </div>
     </div>
-
     <br><br>
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-12">
-                <h2>Cines</h2>
+                <h2>Reservaciones</h2>
                 <br>
-                <div class="dt-responsive table-responsive"></div>
-                    <table class="table table-bordered table-hover table-striped nowrap" id="tabla_cines">
+                <div class="dt-responsive table-responsive">
+                    <table class="table table-striped table-bordered table-hover nowrap" id="tabla_reservaciones">
                         <thead class="thead-dark">
                             <th>Id</th>
-                            <th>Nombre</th>
-                            <th>Responsable</th>
-                            <th>Capacidad</th>
-                            <th>Categoria</th>
-                            <th>Descripción</th>                            
+                            <th>Fecha de Reserva</th>
+                            <th>Fecha de Devolución</th>
+                            <th>Status</th>
+                            <th>Cinema</th>
+                            <th>Cliente</th>
+                            <th>Score</th>
                             <th>Ver</th>
                             <th>Eliminar</th>
                         </thead>
@@ -120,8 +123,8 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-    <script src="js/cinema.js"></script>
-    
+    <script src="js/reservation.js"></script>
+
 </body>
 
 </html>
